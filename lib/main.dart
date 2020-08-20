@@ -12,22 +12,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: myTrax(),
+      home: myTaskz(),
     );
   }
 }
 
-class myTrax extends StatefulWidget {
+class myTaskz extends StatefulWidget {
   @override
-  _myTraxState createState() => _myTraxState();
+  _myTaskzState createState() => _myTaskzState();
 }
 
-class _myTraxState extends State<myTrax> {
+class _myTaskzState extends State<myTaskz> {
 
   TextEditingController taskController = new TextEditingController();
-
+  // Variables
   List<Todo> myTodos = [
     Todo('Hit the gym', 1),
+    Todo('Complete assignments', 2),
     Todo('Take out trash', 0)
   ];
   Todo newTodo = new Todo('',0);
@@ -35,8 +36,8 @@ class _myTraxState extends State<myTrax> {
   bool isLowBtn = true; //if low button is pressed
   bool isMediumBtn = false; // if medium button is pressed
   bool isHighBtn = false; // if high button is pressed
-  bool noTextError = false;
-
+  bool noTextError = false; // shows error when no text has been entered
+  //
   String Priority(Todo inputTodo) {
     switch(inputTodo.priority){
       case 0:{
@@ -65,26 +66,43 @@ class _myTraxState extends State<myTrax> {
       }
       break;
       default: {
-        return Colors.pink;
+        return Colors.red;
       }
       break;
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Center(
         child: Scaffold(
+
           appBar: AppBar(
-            title: Text('My Trax',
-              style: TextStyle(
-                color: Colors.blueAccent,
-            ),
+            title: Stack(
+              children: <Widget>[
+                Text('My Taskz',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 6
+                      ..color = Colors.black,
+                  ),
+                ),
+                Text('My Taskz',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Colors.blueGrey,
+                  ),
+                ),
+              ],
             ),
             centerTitle: true,
-            backgroundColor: Colors.black87,
+            backgroundColor: Colors.black45,
+
           ),
-          body: Center(
+          body: SafeArea(
             child: Column(
               children: <Widget>[
                 Padding(
@@ -93,15 +111,15 @@ class _myTraxState extends State<myTrax> {
                     controller: taskController,
                     decoration: InputDecoration(
                       hintText: 'Enter new task',
+                      labelText: 'New Task',
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                      ),
                       border: OutlineInputBorder( // gives basic outline border
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       focusedBorder: OutlineInputBorder( // gives outline border when clicked/focused
                         borderSide: BorderSide(color: Colors.black),
-                      ),
-                      labelText: 'New Task',
-                      labelStyle: TextStyle(
-                        color: Colors.black,
                       ),
                       errorText: noTextError ? 'Please enter new task' : null,
                       errorBorder: OutlineInputBorder(
@@ -153,7 +171,7 @@ class _myTraxState extends State<myTrax> {
                       },
                     ),
                     RaisedButton(
-                      color: isHighBtn ? Colors.pink : Colors.transparent,
+                      color: isHighBtn ? Colors.red : Colors.transparent,
                       textColor: Colors.black87,
                       highlightColor: Colors.pink,
                       shape: RoundedRectangleBorder(
@@ -181,7 +199,7 @@ class _myTraxState extends State<myTrax> {
                       return Card(
                         child: ListTile(
                           onTap: () {
-                            print('Task: ' + myTodos[index].task + ', Priority: ' + Priority(myTodos[index]));
+                            print('Task: ' + myTodos[index].task + ', Priority: ' + Priority(myTodos[index])); //Prints info about current list tile
                           },
                           title: Text(myTodos[index].task),
                           subtitle: Text('Priority:' + Priority(myTodos[index])),
@@ -196,7 +214,7 @@ class _myTraxState extends State<myTrax> {
                                 side: BorderSide(color: Colors.black87),
                               ),
                               child: Icon(
-                                Icons.close,
+                                Icons.clear,
                               ),
                               padding: EdgeInsets.all(2),
                               onPressed: () {
@@ -219,7 +237,7 @@ class _myTraxState extends State<myTrax> {
               ],
             ),
           ),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.blueGrey,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               setState(() {
@@ -244,8 +262,8 @@ class _myTraxState extends State<myTrax> {
               taskController.clear();
             },
             child: Icon(
-              Icons.add,
-              color: Colors.blueAccent,
+              Icons.playlist_add,
+              color: Colors.blueGrey,
             ),
             backgroundColor: Colors.black87,
           ),
