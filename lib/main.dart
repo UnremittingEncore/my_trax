@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:my_trax/Todo.dart';
@@ -26,12 +27,15 @@ class _myTraxState extends State<myTrax> {
   TextEditingController taskController = new TextEditingController();
 
   List<Todo> myTodos = [
-    Todo('Hello', 0),
-    Todo('Test', 1)
+    Todo('Hit the gym', 1),
+    Todo('Take out trash', 0)
   ];
   Todo newTodo = new Todo('',0);
   Todo newTodoTemp;
-  bool isButtonPressed = false;
+  bool isLowBtn = true; //if low button is pressed
+  bool isMediumBtn = false; // if medium button is pressed
+  bool isHighBtn = false; // if high button is pressed
+  bool noTextError = false;
 
   String Priority(Todo inputTodo) {
     switch(inputTodo.priority){
@@ -88,12 +92,24 @@ class _myTraxState extends State<myTrax> {
                   child: TextField(
                     controller: taskController,
                     decoration: InputDecoration(
-                      //hintText: 'Enter new task',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.cyanAccent),
+                      hintText: 'Enter new task',
+                      border: OutlineInputBorder( // gives basic outline border
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder( // gives outline border when clicked/focused
+                        borderSide: BorderSide(color: Colors.black),
                       ),
                       labelText: 'New Task',
-                     // contentPadding: EdgeInsets.only(left: 20, top: 10, right: 20),
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      errorText: noTextError ? 'Please enter new task' : null,
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
                     ),
                   ),
                 ),
@@ -101,10 +117,9 @@ class _myTraxState extends State<myTrax> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     RaisedButton(
-                      color: Colors.transparent,
+                      color: isLowBtn ? Colors.green : Colors.transparent,
                       textColor: Colors.black87,
                       highlightColor: Colors.green,
-                      splashColor: Colors.green,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                         side: BorderSide(color: Colors.black87),
@@ -112,12 +127,15 @@ class _myTraxState extends State<myTrax> {
                       child: Text('Low'),
                       onPressed: () {
                         setState(() {
+                          isLowBtn = !isLowBtn;
+                          isMediumBtn = false;
+                          isHighBtn = false;
                           newTodo.priority = 0;
                         });
                       },
                     ),
                     RaisedButton(
-                      color: Colors.transparent,
+                      color: isMediumBtn ? Colors.amberAccent : Colors.transparent,
                       textColor: Colors.black87,
                       highlightColor: Colors.amberAccent,
                       shape: RoundedRectangleBorder(
@@ -127,12 +145,15 @@ class _myTraxState extends State<myTrax> {
                       child: Text('Medium'),
                       onPressed: () {
                         setState(() {
+                          isMediumBtn = !isMediumBtn;
+                          isLowBtn = false;
+                          isHighBtn = false;
                           newTodo.priority = 1;
                         });
                       },
                     ),
                     RaisedButton(
-                      color: Colors.transparent,
+                      color: isHighBtn ? Colors.pink : Colors.transparent,
                       textColor: Colors.black87,
                       highlightColor: Colors.pink,
                       shape: RoundedRectangleBorder(
@@ -143,6 +164,9 @@ class _myTraxState extends State<myTrax> {
 
                       onPressed: () {
                         setState(() {
+                          isHighBtn = !isHighBtn;
+                          isLowBtn = false;
+                          isMediumBtn = false;
                           newTodo.priority = 2;
                         });
                       },
@@ -198,15 +222,26 @@ class _myTraxState extends State<myTrax> {
           backgroundColor: Colors.blueAccent,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
+              setState(() {
+                noTextError = false;
+              });
               newTodo.task = taskController.text;
               newTodoTemp = newTodo;
               if(newTodo.task != '') {
                 setState(() {
+                  isLowBtn = true;
+                  isMediumBtn = false;
+                  isHighBtn = false;
                   myTodos.insert(0,newTodoTemp);
                   newTodo = new Todo('',0);
                 });
               }
-              print(myTodos[1].task);
+              else {
+                setState(() {
+                  noTextError = true;
+                });
+              }
+              taskController.clear();
             },
             child: Icon(
               Icons.add,
