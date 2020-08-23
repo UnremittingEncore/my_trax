@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:my_trax/Todo.dart';
 
 void main() {
@@ -81,25 +82,27 @@ class _myTaskzState extends State<myTaskz> {
           appBar: AppBar(
             title: Stack(
               children: <Widget>[
+                /*
                 Text('My Taskz',
                   style: TextStyle(
                     fontSize: 25.0,
                     foreground: Paint()
                       ..style = PaintingStyle.stroke
-                      ..strokeWidth = 6
+                      ..strokeWidth = 3
                       ..color = Colors.black,
                   ),
-                ),
+                ),*/
                 Text('My Taskz',
                   style: TextStyle(
                     fontSize: 25.0,
-                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black,
                   ),
                 ),
               ],
             ),
             centerTitle: true,
-            backgroundColor: Colors.black45,
+            backgroundColor: Colors.blue,
 
           ),
           body: SafeArea(
@@ -196,40 +199,48 @@ class _myTaskzState extends State<myTaskz> {
                   child: ListView.builder(
                     itemCount: myTodos.length,
                     itemBuilder: (context, index){
-                      return Card(
-                        child: ListTile(
-                          onTap: () {
-                            print('Task: ' + myTodos[index].task + ', Priority: ' + Priority(myTodos[index])); //Prints info about current list tile
-                          },
-                          title: Text(myTodos[index].task),
-                          subtitle: Text('Priority:' + Priority(myTodos[index])),
-                          trailing: SizedBox(
-                            width: 35.0,
-                            child: RaisedButton(
-                              color: Colors.transparent,
-                              textColor: Colors.black87,
-                              highlightColor: Colors.teal,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                side: BorderSide(color: Colors.black87),
+                      return Dismissible(
+                        key: Key(myTodos[index].task),
+                        onDismissed: (direction){
+                          setState(() {
+                            myTodos.removeAt(index);
+                          });
+                        },
+                        child: Card(
+                          child: ListTile(
+                            onTap: () {
+                              print('Task: ' + myTodos[index].task + ', Priority: ' + Priority(myTodos[index])); //Prints info about current list tile
+                            },
+                            title: Text(myTodos[index].task),
+                            subtitle: Text('Priority:' + Priority(myTodos[index])),
+                            trailing: SizedBox(
+                              width: 35.0,
+                              child: RaisedButton(
+                                color: Colors.transparent,
+                                textColor: Colors.black87,
+                                highlightColor: Colors.teal,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  side: BorderSide(color: Colors.black87),
+                                ),
+                                child: Icon(
+                                  Icons.clear,
+                                ),
+                                padding: EdgeInsets.all(2),
+                                onPressed: () {
+                                  setState(() {
+                                    myTodos.removeAt(index);
+                                  });
+                                },
                               ),
-                              child: Icon(
-                                Icons.clear,
-                              ),
-                              padding: EdgeInsets.all(2),
-                              onPressed: () {
-                                setState(() {
-                                  myTodos.removeAt(index);
-                                });
-                              },
                             ),
                           ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(color: Colors.black87),
+                          ),
+                          color: customColor(myTodos[index].priority),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: Colors.black87),
-                        ),
-                        color: customColor(myTodos[index].priority),
                       );
                     },
                   ),
@@ -237,11 +248,12 @@ class _myTaskzState extends State<myTaskz> {
               ],
             ),
           ),
-          backgroundColor: Colors.blueGrey,
+          backgroundColor: Colors.lightBlueAccent,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               setState(() {
                 noTextError = false;
+                FocusScope.of(context).unfocus();//to disable keyboard after clicking add button
               });
               newTodo.task = taskController.text;
               newTodoTemp = newTodo;
@@ -263,7 +275,7 @@ class _myTaskzState extends State<myTaskz> {
             },
             child: Icon(
               Icons.playlist_add,
-              color: Colors.blueGrey,
+              color: Colors.cyan,
             ),
             backgroundColor: Colors.black87,
           ),
