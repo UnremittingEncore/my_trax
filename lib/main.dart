@@ -28,9 +28,13 @@ class _myTaskzState extends State<myTaskz> {
   TextEditingController taskController = new TextEditingController();
   // Variables
   List<Todo> myTodos = [
-    Todo('Hit the gym', 1),
+    Todo('Watch Avengers Endgame', 0),
+    Todo('Hit the gym', 2),
+    Todo('Wash Hands for 20 seconds', 1),
+    Todo('Complete Maths Homework', 0),
+    Todo('Buy Groceries', 1),
     Todo('Complete assignments', 2),
-    Todo('Take out trash', 0)
+    Todo('Take out trash', 0),
   ];
   Todo newTodo = new Todo('',0);
   Todo newTodoTemp;
@@ -82,17 +86,7 @@ class _myTaskzState extends State<myTaskz> {
           appBar: AppBar(
             title: Stack(
               children: <Widget>[
-                /*
-                Text('My Taskz',
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    foreground: Paint()
-                      ..style = PaintingStyle.stroke
-                      ..strokeWidth = 3
-                      ..color = Colors.black,
-                  ),
-                ),*/
-                Text('My Taskz',
+                Text('myTaskz',
                   style: TextStyle(
                     fontSize: 25.0,
                     fontWeight: FontWeight.w300,
@@ -121,7 +115,7 @@ class _myTaskzState extends State<myTaskz> {
                       border: OutlineInputBorder( // gives basic outline border
                         borderSide: BorderSide(color: Colors.black),
                       ),
-                      focusedBorder: OutlineInputBorder( // gives outline border when clicked/focused
+                      focusedBorder: OutlineInputBorder( // gives outline border when clicked or focused
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       errorText: noTextError ? 'Please enter new task' : null,
@@ -148,7 +142,7 @@ class _myTaskzState extends State<myTaskz> {
                       child: Text('Low'),
                       onPressed: () {
                         setState(() {
-                          isLowBtn = !isLowBtn;
+                          isLowBtn = true;
                           isMediumBtn = false;
                           isHighBtn = false;
                           newTodo.priority = 0;
@@ -166,7 +160,7 @@ class _myTaskzState extends State<myTaskz> {
                       child: Text('Medium'),
                       onPressed: () {
                         setState(() {
-                          isMediumBtn = !isMediumBtn;
+                          isMediumBtn = true;
                           isLowBtn = false;
                           isHighBtn = false;
                           newTodo.priority = 1;
@@ -185,7 +179,7 @@ class _myTaskzState extends State<myTaskz> {
 
                       onPressed: () {
                         setState(() {
-                          isHighBtn = !isHighBtn;
+                          isHighBtn = true;
                           isLowBtn = false;
                           isMediumBtn = false;
                           newTodo.priority = 2;
@@ -215,7 +209,7 @@ class _myTaskzState extends State<myTaskz> {
                             subtitle: Text('Priority:' + Priority(myTodos[index])),
                             trailing: SizedBox(
                               width: 35.0,
-                              child: RaisedButton(
+                              child: FlatButton(
                                 color: Colors.transparent,
                                 textColor: Colors.black87,
                                 highlightColor: Colors.teal,
@@ -263,7 +257,7 @@ class _myTaskzState extends State<myTaskz> {
                   isMediumBtn = false;
                   isHighBtn = false;
                   myTodos.insert(0,newTodoTemp);
-                  newTodo = new Todo('',0);
+                  newTodo = Todo('',0);
                 });
               }
               else {
